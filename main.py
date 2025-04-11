@@ -115,6 +115,7 @@ while run:
         else:
             player_car.reset()
             print("finish")
+            print("what")
     # endregion collusion checks
     #endregion updating/setting FPS
     for event in pygame.event.get(): 
