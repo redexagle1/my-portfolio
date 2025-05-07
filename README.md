@@ -10,7 +10,7 @@ honestly I am not surprised at all I mean python has a massive library index tha
 the projects you are going to witness focus on building games in pyhton dev
 1. a simple racing game
 this is my first project that I have learned and developed not gonna lie if it's based on this playlist 
-![https://youtu.be/V_B5ZCli-rA?feature=shared&t=28]
+https://youtu.be/V_B5ZCli-rA?feature=shared&t=28
 but this experience gave me the following:
 - a solid understanding of how can you develop a 2D pixel game which of course involved 
     - how can you control the movement of your charcter 
