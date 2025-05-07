@@ -98,12 +98,34 @@ class CarRobot(AbstractCar):
         self.vel =max_vel 
     def move(self):
         if self.current_point >= len(self.path):
+            ''' this if is to prvents an 
+        index error if we tried to move to a point that doesn't exist'''
             return
-        self.angel_calculation()
-        self.update_path()
+        self.angel_calculation() 
+        self.update_path() 
+        ''' calculate the bot's angle and shifts toward that direction
+        see if if the bot needs to move to a new point whenever the 
+        bot hit a new point the''' 
         super().move()
     def angel_calculation(self):
-        ...
+        """this will calculate the angel which we need to 
+        move to the next point
+        """
+        target_x,target_y = self.path[self.current_point]
+        #differance calculation
+        diff_x = target_x - self.x
+        diff_y = target_y - self.y
+        '''this condition check if diff_y = 0 
+        if so the angle will be 90 by radian
+        if not it will get the differance of y and x devide them to get arctan()
+        this will lead us to calculate which direction the car is and will help in
+        changing the bot's direction smoothly'''
+        
+        if diff_y == 0 :desired_radian_angle = math.pi/2 
+        else: desired_radian_angle=math.atan(diff_x/diff_y)
+        if target_y > self.y:
+            desired_radian_angle += math.pi
+        differance_in_angel = self.angel - math.degrees(desired_radian_angle)
     def update_path(self):
         ...
     def draw_point(self,win):
