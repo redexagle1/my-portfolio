@@ -15,7 +15,7 @@ FINISH_MASK = pygame.mask.from_surface(FINISH)
 CAR_PLAYER = scale_image(pygame.image.load("imgs/red-car.png"),.55)
 CAR_ENEMY = scale_image(pygame.image.load("imgs/green-car.png"),.55)
 TRACK_BORDERS = scale_image(pygame.image.load("imgs/track-border.png"),.9)
-"""MASK its somethin we usr to make collusion in the pixel world
+"""MASK its something we usr to make collusion in the pixel world
 see,normal the image of your object wether contains pixel or transperancy background
 python deals with it as a rectangle
 so to seprate the transperancy background pixel(بكسلات الخلفيه الشفافه) from
@@ -116,6 +116,7 @@ while run:
             player_car.reset()
             print("finish")
             print("what")
+            
     # endregion collusion checks
     #endregion updating/setting FPS
     for event in pygame.event.get(): 
