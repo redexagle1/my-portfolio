@@ -5,7 +5,7 @@ this contain all my project that I have worked on during my life from 07-05-2025
     - pygame
         1. a simple car racing game
 ## game developement
-- pygame 
+### pygame 
 honestly I am not surprised at all I mean python has a massive library index that have multiple usage from data analysis to web development and so on
 the projects you are going to witness focus on building games in pyhton dev
 1. a simple racing game
