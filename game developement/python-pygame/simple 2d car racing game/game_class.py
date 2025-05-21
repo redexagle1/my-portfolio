@@ -98,7 +98,7 @@ class CarRobot(AbstractCar):
         self.vel =max_vel 
     def move(self):
         if self.current_point >= len(self.path):
-            ''' this if is to prvents an 
+            ''' this if here to prvents an 
         index error if we tried to move to a point that doesn't exist'''
             return
         self.angel_calculation() 
@@ -121,19 +121,52 @@ class CarRobot(AbstractCar):
         this will lead us to calculate which direction the car is and will help in
         changing the bot's direction smoothly'''
         
-        if diff_y == 0 :desired_radian_angle = math.pi/2 
-        else: desired_radian_angle=math.atan(diff_x/diff_y)
+        if diff_y == 0 :
+            desired_radian_angle = math.pi/2 
+        else:
+            desired_radian_angle=math.atan(diff_x/diff_y)
+        
+        """this condition is responsible of fixxing the angle slightly
+        you se we are calculating the acute(less than 90 degrees)angle but if the 
+        diffrence between our target and our calculated angle is huge this will 
+        results an extreme turning which is unwanted so by adding PI to our angle
+        we reverse the turning direction
+        """
         if target_y > self.y:
             desired_radian_angle += math.pi
         differance_in_angel = self.angel - math.degrees(desired_radian_angle)
+        
+        
+        """so this code block checks if our difference in angle > 180 since if 
+        that happen your bot will turn in a wrong direction unsmoothly so by 
+        subtacting 360 we will make the car rotate smoothly in the correct direction 
+        """
+        if differance_in_angel >= 180:
+            differance_in_angel -= 360
+            # print('PATH UPDATED')
+            
+        """this code block snap on the desired angle smoothly as if we depend on 
+        one of them the rotation will be unaccurate
+        """
+        if differance_in_angel >0:
+            self.angel -= min(self.rotation_vel,abs(differance_in_angel))
+        else:
+            self.angel += min(self.rotation_vel,abs(differance_in_angel))
+        """YEP ANGLES ARE DIFFICULT"""
+    
     def update_path(self):
-        ...
+        """move to the next point of our path list"""
+        target = self.path[self.current_point]
+        rect =  pygame.Rect(self.x,self.y,self.img.get_width(),self.img.get_height())
+        if rect.collidepoint(*target):
+            self.current_point += 1    
+            
     def draw_point(self,win):
         for points in self.path:
             pygame.draw.circle(win,(255,0,0),points,5)
     
     def draw_car(self, win):
         super().draw_car(win)
-        self.draw_point(win)
+        # self.draw_point(win)
 #endregion PLAYER car
 #endregion classes   

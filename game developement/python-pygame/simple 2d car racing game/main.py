@@ -4,17 +4,23 @@ import time
 # the custom hand-made function module
 from util import scale_image,blit_rotate_centre
 from game_class import *
+import os
+from dotenv import load_dotenv
+# you know that paths are TOP SECRETS (IDK but incease)
+load_dotenv('credintials.env')
+file_path =os.getenv('my_path')
+computer_path = []
 #endregion 
 #region assets
 # idenefying the game's assets
-TRACK = scale_image(pygame.image.load("imgs/track.png"),.9)
-GRASS = scale_image(pygame.image.load("imgs/grass.jpg"),2.5)
-FINISH = (pygame.image.load("imgs/finish.png"))
+TRACK = scale_image(pygame.image.load("C:/Users/saad/Documents/saad/my portofolio/my-portfolio/game developement/python-pygame/simple 2d car racing game/imgs/track.png"),.9)
+GRASS = scale_image(pygame.image.load("C:/Users/saad/Documents/saad/my portofolio/my-portfolio/game developement/python-pygame/simple 2d car racing game/imgs/grass.jpg"),2.5)
+FINISH = (pygame.image.load("C:/Users/saad/Documents/saad/my portofolio/my-portfolio/game developement/python-pygame/simple 2d car racing game/imgs/finish.png"))
 FINISH_POSITION = (130,250)
 FINISH_MASK = pygame.mask.from_surface(FINISH)
-CAR_PLAYER = scale_image(pygame.image.load("imgs/red-car.png"),.55)
-CAR_ENEMY = scale_image(pygame.image.load("imgs/green-car.png"),.55)
-TRACK_BORDERS = scale_image(pygame.image.load("imgs/track-border.png"),.9)
+CAR_PLAYER = scale_image(pygame.image.load("C:/Users/saad/Documents/saad/my portofolio/my-portfolio/game developement/python-pygame/simple 2d car racing game/imgs/red-car.png"),.55)
+CAR_ENEMY = scale_image(pygame.image.load("C:/Users/saad/Documents/saad/my portofolio/my-portfolio/game developement/python-pygame/simple 2d car racing game/imgs/green-car.png"),.55)
+TRACK_BORDERS = scale_image(pygame.image.load("C:/Users/saad/Documents/saad/my portofolio/my-portfolio/game developement/python-pygame/simple 2d car racing game/imgs/track-border.png"),.9)
 """MASK its something we usr to make collusion in the pixel world
 see,normal the image of your object wether contains pixel or transperancy background
 python deals with it as a rectangle
@@ -42,16 +48,19 @@ to do that
 3. make a bounce function in the PlayerCar class that perform the collusion process
     """
 TRACK_BORDERS_MASK = pygame.mask.from_surface(TRACK_BORDERS)
+
 #the list is for storing images to be drawn later in the while loop
 images = [(GRASS,(0,0)),(TRACK,(0,0)),(FINISH,FINISH_POSITION),(TRACK_BORDERS,(0,0))]
 player_car = CarPlayer(4,4,CAR_PLAYER)
-comp_path=[(176, 163), (160, 98), (118, 74), (74, 105), (65, 158), (64, 213), (63, 281), (61, 462), (62, 410), (85, 502), (172, 597), (283, 708), (326, 729), (374, 727), (404, 688), (412, 629), (418, 521), (414, 554), (461, 494), (516, 484), (551, 492), (581, 528), (597, 561), (602, 629), (613, 705), (608, 668), (638, 727), (685, 731), (729, 711), (738, 669), (736, 621), (750, 461), (745, 426), (734, 380), (691, 370), (645, 368), (565, 368), (458, 367), (407, 335), (408, 284), (461, 252), (518, 254), (608, 250), (688, 253), (732, 231), (747, 177), (740, 106), (691, 72), (627, 72), (553, 67), (478, 72), (423, 75), (359, 81), (306, 91), (282, 124), (281, 174), (283, 231), (283, 277), (283, 320), (283, 358), (264, 391), (226, 404), (195, 395), (179, 354), (178, 308), (175, 281), (174, 259)]
-computer_car = CarRobot(4,4,CAR_ENEMY)
+comp_path=[(171, 159), (160, 88), (104, 84), (59, 119), (54, 195), (63, 371), (57, 474), (84, 510), (133, 546), (281, 687), (308, 716), (369, 729), (397, 693), (407, 636), (427, 504), (496, 487), (567, 495), (599, 575), (609, 690), (716, 720), (751, 615), (754, 545), (736, 414), (693, 358), (582, 355), (465, 358), (413, 303), (424, 267), (491, 256), (612, 254), (736, 233), (742, 145), (667, 75), (556, 77), (433, 76), (283, 98), (274, 194), (273, 264), (272, 324), (274, 383), (233, 409), (177, 393), (175, 316), (171, 260)]
+computer_car = CarRobot(3,4,CAR_ENEMY,path = comp_path)
+
 # setting up the screen
 HEIGHT,WIDTH =TRACK_BORDERS.get_height(),TRACK_BORDERS.get_width()
 WIN = pygame.display.set_mode((WIDTH,HEIGHT))
 pygame.display.set_caption("racing game".title())
 #endregion assets
+
 #region FPS\render
 """those 2 is meant for controlling the rendering speed
 uniting the renderd FPS so it runs on the same speed in any computer"""
@@ -103,16 +112,26 @@ while run:
     screen_drawing(WIN,images,player_car,computer_car)
     # controlling the movement
     movement(player_car)
+    computer_car.move()
     # region collusion checks
     # check track collusion
     if player_car.collide(TRACK_BORDERS_MASK) != None:
         player_car.bounce()
     # check finish line collusion
-    finish_line_collusion =player_car.collide(FINISH_MASK,*FINISH_POSITION)
-    if finish_line_collusion !=None:
-        if finish_line_collusion[1]==0:
+    computer_finish_line_collusion =computer_car.collide(FINISH_MASK,*FINISH_POSITION)
+    if computer_finish_line_collusion !=None:
+        if computer_finish_line_collusion[1]==0:
+            computer_car.bounce(True)
+        else:
+            player_car.reset()
+            computer_car.reset()
+            print("comp finish")       
+    player_finish_line_collusion =player_car.collide(FINISH_MASK,*FINISH_POSITION)
+    if player_finish_line_collusion !=None:
+        if player_finish_line_collusion[1]==0:
             player_car.bounce(True)
         else:
+            computer_car.reset()
             player_car.reset()
             print("finish")       
     # endregion collusion checks
@@ -120,8 +139,11 @@ while run:
     for event in pygame.event.get(): 
         """getting the user input 
         and checking if the user hit exit to break this loop"""
+        # if event.type == pygame.MOUSEBUTTONDOWN:
+        #     pos = pygame.mouse.get_pos()
+        #     computer_car.path.append(pos)
         if event.type == pygame.QUIT:
             run =False
-
+# print(computer_car.path)
 # endregion loop
 pygame.quit()      #end the program
