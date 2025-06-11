@@ -1,6 +1,5 @@
 #region imports
 import pygame
-import time
 # the custom hand-made function module
 from util import scale_image,blit_rotate_centre
 from game_class import *
@@ -84,6 +83,7 @@ FPS = 60
 clock = pygame.time.Clock()
 #endregion FPS
 #region key controls 
+
 def movement(player):
     # getting the user input
     keys = pygame.key.get_pressed()
@@ -100,10 +100,19 @@ def movement(player):
         player.movebackward()
         moved=True
     elif not moved:player.reduce_speed() # to apply the القصور الذاتي impact
+def is_finish_line_collusion(car,win_message):
+    car_finish_line_collusion = car.collide(FINISH_MASK,*FINISH_POSITION)
+    if car_finish_line_collusion != None:
+        if car_finish_line_collusion[1]==0:
+            car.bounce(True)
+        else:
+            car.reset()
+            print(win_message)
 #endregion key controls
 # region loop
 # initialize run to act as a switch
 run = True
+game_info = Game_info()
 while run:
     """game logic is here(handling collusion,events)"""
     #region controlling/updating/setting FPS
@@ -111,6 +120,8 @@ while run:
     # rendring the imgs
     screen_drawing(WIN,images,player_car,computer_car)
     # controlling the movement
+    # while not game_info.start_level:
+    #     ...
     movement(player_car)
     computer_car.move()
     # region collusion checks
@@ -118,24 +129,8 @@ while run:
     if player_car.collide(TRACK_BORDERS_MASK) != None:
         player_car.bounce()
     # check finish line collusion
-    computer_finish_line_collusion =computer_car.collide(FINISH_MASK,*FINISH_POSITION)
-    if computer_finish_line_collusion !=None:
-        if computer_finish_line_collusion[1]==0:
-            computer_car.bounce(True)
-        else:
-            player_car.reset()
-            computer_car.reset()
-            print("comp finish")       
-    player_finish_line_collusion =player_car.collide(FINISH_MASK,*FINISH_POSITION)
-    if player_finish_line_collusion !=None:
-        if player_finish_line_collusion[1]==0:
-            player_car.bounce(True)
-        else:
-            computer_car.reset()
-            player_car.reset()
-            print("finish")       
-    # endregion collusion checks
-    #endregion updating/setting FPS
+    is_finish_line_collusion(computer_car,"THE BOT WIN LOOSER")
+    is_finish_line_collusion(player_car,"YOU WIN YAAAY")
     for event in pygame.event.get(): 
         """getting the user input 
         and checking if the user hit exit to break this loop"""

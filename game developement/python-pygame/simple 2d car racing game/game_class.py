@@ -1,5 +1,6 @@
 import pygame
 import math
+import time
 from util import blit_rotate_centre
 #region classes
 #region ABSTRACT car
@@ -164,9 +165,34 @@ class CarRobot(AbstractCar):
     def draw_point(self,win):
         for points in self.path:
             pygame.draw.circle(win,(255,0,0),points,5)
-    
+    def reset(self):
+        self.vel=3
+        self.current_point=0
+        super().reset()
     def draw_car(self, win):
         super().draw_car(win)
         # self.draw_point(win)
 #endregion PLAYER car
+class Game_info:
+    LEVELS = 10
+    def init(self,level=1):
+        self.level = level
+        self.started = False
+        self.level_start_time = 0 # Our stopwatch
+    def next_level(self):
+        self.level += 1
+        self.started = False
+    def reset(self):
+        self.level =1
+        self.started=False
+        self.level_start_time = 0
+    def game_finished(self):
+        # assess if the level counter is greater than max level
+        return self.level > self.LEVELS
+    def starting_level(self):
+        self.start_level = True
+        self.level_start_time = time.time()
+    def get_level_time(self):
+        return 0 if not self.start_level else self.level_start_time-time.time()
+            
 #endregion classes   
